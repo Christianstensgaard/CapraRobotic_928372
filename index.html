@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/Scripts/tailwindjs.js"></script>
+    <script defer src="/Scripts/index.js"></script>
+    <style>
+        .circle {
+            border-radius: 50%;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(229, 231, 235, 1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: translateY(-100%);
+            overflow-y: auto; /* Add scrollability */
+        }
+    </style>
+    <title>Robot status</title>
+</head>
+<body>
+    <nav class="flex items-center justify-between p-4 bg-gray-800 fixed-nav">
+        <div class="flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" id="settings">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+          </svg>
+          <h1 class="text-lg font-bold text-white">Robot status</h1>
+        </div>
+      </nav>
+    <!-- Overlay -->
+    <div class="overlay" id="overlay">
+        <div class="flex justify-center items-center">
+            <h1 class="text-center text-4xl mt-20">Navigation</h1>
+        </div>
+
+        <div class="flex justify-center items-center flex-col mt-40">
+            <div class="w-full h-40 flex items-center justify-center border-y-2 border-slate-950 mb-4 logbookDiv">
+                <span class="text-black-500 text-2xl">Logbook</span>
+            </div>
+
+            <div class="w-full h-40 flex items-center justify-center border-b-2 border-slate-950" id="settingsDiv">
+                <span class="text-black-500 text-2xl">Settings</span>
+            </div>
+        </div>
+        <img src="/icons/close-line-icon.svg" alt="Settings" id="close" class="w-14 h-14 absolute top-0 right-0 mt-4 mr-4">
+    </div>
+    <!-- Overlay end -->
+    <!-- Index page -->
+    <div class="flex justify-center items-center flex-col mt-28">
+        <div class="w-32 h-32 flex items-center justify-center border-4 border-red-500 circle logbookDiv">
+            <span class="text-black-500 text-5xl">1</span>
+        </div>
+        <span class="text-black-500 text-sm mt-2 text-xl">Error(s)</span>
+        <div class="w-32 h-32 flex items-center justify-center border-4 border-yellow-500 circle mt-20 logbookDiv">
+            <span class="text-black-500 text-5xl">2</span>
+        </div>
+        <span class="text-black-500 text-sm mt-2 text-xl mb-4">Warning(s)</span>
+    </div>
+    <!-- Index page end -->
+</body>
+</html>

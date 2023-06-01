@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./CSS/Slider.css">
+    <script src="/Scripts/tailwindjs.js"></script>
+    <script type="module" defer src="./LeosJavaScriptCollection/SettingsView.js"></script>
+    <script defer src="/LeosJavaScriptCollection/mqttws31.min.js"></script>
+    <script defer src="/Scripts/settings.js"></script>
+
+    <title>IO</title>
+
+    <style>
+        .fixed-nav {
+          position: fixed;
+          top: 0;
+          width: 100%;
+          z-index: 1;
+        }
+
+        .w-screen {
+          width: 100vw;
+        }
+
+        .circle {
+            border-radius: 50%;
+        }
+
+        .slider:before {
+          position: absolute;
+          content: "";
+          height: 26px;
+          width: 26px;
+          left: 4px;
+          bottom: 4px;
+          background-color: white;
+          -webkit-transition: .4s;
+          transition: .4s;
+        }
+
+        input:checked + .slider {
+          background-color: #2196F3;
+        }
+
+        input:focus + .slider {
+          box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked + .slider:before {
+          -webkit-transform: translateX(26px);
+          -ms-transform: translateX(26px);
+          transform: translateX(26px);
+        }
+
+        .container {
+          display: flex;
+          align-items: center;
+        }
+
+
+
+
+
+
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(229, 231, 235, 1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: translateY(-100%);
+            overflow-y: auto; /* Add scrollability */
+        }
+    </style>
+</head>
+<body>
+  <nav class="flex items-center justify-between p-4 bg-gray-800 fixed-nav">
+    <div class="flex items-center">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" id="settings">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+      </svg>
+      <h1 class="text-lg font-bold text-white">Settings</h1>
+    </div>
+    <div class="flex items-center">
+      <button class="px-3 py-1 mr-4 text-sm text-white bg-gray-700 rounded-md hover:bg-gray-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="inline-block w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h16M4 12h8m-8 4h16" />
+        </svg>
+        Search
+      </button>
+      <button class="px-3 py-1 text-sm text-white bg-gray-700 rounded-md hover:bg-gray-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="inline-block w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+        </svg>
+        Collapse All
+      </button>
+    </div>
+  </nav>
+
+  <nav class="flex items-center justify-between p-4 bg-gray-700 mt-14 ">
+    <div class="flex items-center">
+    </div>
+    <div class="flex items-center">
+      <button class="px-3 py-1 mr-0 text-sm text-white bg-gray-700 rounded-md hover:bg-gray-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="inline-block w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h16M4 12h8m-8 4h16" />
+        </svg>
+        Save
+      </button>
+      <button class="px-3 py-1 text-sm text-white bg-gray-700 rounded-md hover:bg-gray-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="inline-block w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+        </svg>
+        Reset All
+      </button>
+    </div>
+  </nav>
+  
+<!-- Overlay -->
+<div class="overlay" id="overlay">
+  <div class="flex items-center justify-center">
+      <h1 class="mt-20 text-4xl text-center">Navigation</h1>
+  </div>
+
+  <div class="flex flex-col items-center justify-center mt-40">
+      <div class="flex items-center justify-center w-full h-40 mb-4 border-y-2 border-slate-950" id="statusDiv">
+          <span class="text-2xl text-black-500">Robot Status</span>
+      </div>
+
+      <div class="flex items-center justify-center w-full h-40 border-b-2 border-slate-950" id="logbookDiv">
+          <span class="text-2xl text-black-500">Logbook</span>
+      </div>
+  </div>
+  <img src="/icons/close-line-icon.svg" alt="Settings" id="close" class="absolute top-0 right-0 mt-4 mr-4 w-14 h-14">
+</div>
+<!-- Overlay end -->
+
+    <!------------------------------------------------------------------------------------------------------------------------------------------------->
+    <!--Container the moduleTable-->
+    <div class="mt-2" id="Main"></div>
+    <!------------------------------------------------------------------------------------------------------------>
+
+</body>
+</html>

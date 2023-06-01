@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Paho MQTT Client Example</title>
+  <script src="mqttws31.min.js"></script>
+  <script src="../tailwindjs.js"></script>
+</head>
+<body>
+
+
+  <div class="container p-8 mx-auto">
+    <table class="bg-white rounded-lg shadow-md table-auto">
+      <thead>
+        <tr>
+          <th class="px-6 py-3 text-sm font-semibold text-gray-700 uppercase bg-gray-100">Name</th>
+          <th class="px-6 py-3 text-sm font-semibold text-gray-700 uppercase bg-gray-100">Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr id="row">
+          
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    // Set up the MQTT broker's URL and port
+
+    const bs = document.getElementById('bs');
+
+
+    const brokerUrl = 'localhost';
+    const brokerPort = 8883;
+
+    // Function to initialize the MQTT client
+    function initializeClient() {
+      // Set up the MQTT client
+
+      const client = new Paho.MQTT.Client(brokerUrl, brokerPort, 'WebBigBalls');
+
+      // Set up the connection options
+      const connectOptions = {
+        onSuccess: onConnect,
+        onFailure: onFailure
+      };
+
+      // Set up the message callback
+      client.onMessageArrived = onMessageArrived;
+
+      // Connect to the MQTT broker
+      client.connect(connectOptions);
+
+      // Function called on successful connection
+      function onConnect() {
+        console.log('Connected to MQTT broker');
+
+        // Subscribe to a topic
+        client.subscribe('capra/robot/status/core');
+
+        // Publish a message to a topic
+        const message = new Paho.MQTT.Message('0');
+        message.destinationName = 'capra/service/tier0/sensors/ultrasound/mode';
+        client.send(message);
+      }
+
+      // Function called on connection failure
+      function onFailure(error) {
+        console.error('Failed to connect:', error);
+      }
+
+      // Function called when a message arrives
+      function onMessageArrived(message) {
+        console.log('Received message:', message.payloadString);
+        const data = JSON.parse(message.payloadString);
+
+        // Extract the title and value
+        const title = Object.keys(data)[0];
+        const value = data[title];
+
+        console.log("Title:", title);
+        console.log("Value:", value);
+
+        const row = document.getElementById('row');
+        row.innerHTML = `<td class="px-6 py-4 border-t">Battery Percentage</td> <td class="px-6 py-4 border-t">${value}</td>`;
+      }
+    }
+
+    // Load the Paho MQTT library
+    initializeClient();
+  </script>
+</body>
+</html>
